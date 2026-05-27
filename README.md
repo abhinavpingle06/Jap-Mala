@@ -1,8 +1,10 @@
 # Virtual Jap Mala
 
 A calm, modern landing page for a meditation-first app built with Next.js App Router.
+<img width="1899" height="739" alt="image" src="https://github.com/user-attachments/assets/23544f14-5a67-4799-b00b-c5eb4d2d3638" />
 
 This project is a lightweight UI prototype for a digital jap mala experience centered on mindfulness, soft motion, glassmorphism, and a peaceful dark theme.
+We are live, do check us out - https://jap-mala-lovat.vercel.app/ 🧘‍♀️
 
 ## Features
 
