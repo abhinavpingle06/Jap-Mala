@@ -77,6 +77,21 @@ npm start
 
 This project can be deployed to Vercel or any platform that supports Next.js apps.
 
+## PWA and Offline Support
+
+- The app is configured as a Progressive Web App using `next-pwa`.
+- `public/manifest.json` and `public/icons/` provide install metadata and icon references.
+- A service worker caches static pages, assets, and the manifest so the landing page,
+  login page, and signup page work offline after initial load.
+- To test the PWA locally, run:
+
+```bash
+npm run build
+npm start
+```
+
+Then open the app in Chrome, inspect the Application tab, and verify the service worker is registered.
+
 ## License
 
 This repository is currently unlicensed. Add a license file if you want to publish or share the project publicly.

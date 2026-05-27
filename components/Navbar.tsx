@@ -19,7 +19,7 @@ export function Navbar({ links }: NavbarProps) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6 md:px-8"
     >
-      <a href="#top" className="text-lg font-semibold tracking-tight text-slate-100">
+      <a href="#top" className="font-semibold tracking-tight text-slate-100">
         Virtual Jap Mala
       </a>
       <div className="flex items-center gap-8">

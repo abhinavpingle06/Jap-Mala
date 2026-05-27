@@ -1,4 +1,5 @@
-import { Activity, Music, CloudOff, Sparkles } from "lucide-react";
+import { progress } from "framer-motion";
+import { Activity, Music, CloudOff, ChartAreaIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export const navLinks = [
@@ -26,6 +27,6 @@ export const featureItems: Array<{ title: string; description: string; icon: Luc
   {
     title: "Daily Progress",
     description: "See your rhythm, streaks, and moments of quiet presence.",
-    icon: Sparkles,
+    icon: ChartAreaIcon,
   },
 ];
