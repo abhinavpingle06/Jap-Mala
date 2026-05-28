@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Bead } from "@/components/Bead";
+import Image from "next/image";
 import { CounterPanel } from "@/components/CounterPanel";
 
 const beadCount = 108;
@@ -15,7 +15,16 @@ function normalizeIndex(index: number) {
 export function JapMala() {
   const [count, setCount] = useState(0);
   const [rounds, setRounds] = useState(0);
+
+  /**
+   * currentIndex = current active bead
+   */
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  /**
+   * animation trigger
+   */
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReset = useCallback(() => {
     setCount(0);
@@ -23,73 +32,201 @@ export function JapMala() {
     setCurrentIndex(0);
   }, []);
 
-  const handleTap = useCallback(() => {
-    setCount((currentCount) => {
-      const nextCount = currentCount + 1;
-      if (nextCount >= beadCount) {
-        setRounds((currentRounds) => currentRounds + 1);
-        return 0;
-      }
-      return nextCount;
+  const handleTap = () => {
+    if (isAnimating) return;
+
+    setIsAnimating(true);
+
+    /**
+     * AFTER animation completes:
+     * move actual bead data
+     */
+    setTimeout(() => {
+      setCurrentIndex((prev) => normalizeIndex(prev + 1));
+
+      setCount((prev) => {
+        const next = prev + 1;
+
+        if (next >= beadCount) {
+          setRounds((r) => r + 1);
+          return 0;
+        }
+
+        return next;
+      });
+
+      setIsAnimating(false);
+    }, 180);
+  };
+
+  /**
+   * Visible beads
+   */
+  const visibleBeads = useMemo(() => {
+    return Array.from({ length: visibleBeadCount }, (_, position) => {
+      const offset = position - centerIndex;
+
+      return {
+        beadIndex: normalizeIndex(currentIndex + offset),
+        offset,
+        active: offset === 0,
+        id: `${currentIndex}-${position}`,
+      };
     });
-
-    setCurrentIndex((index) => normalizeIndex(index + 1));
-  }, []);
-
-  const visibleBeads = useMemo(
-    () =>
-      Array.from({ length: visibleBeadCount }, (_, position) => {
-        const offset = position - centerIndex;
-        const beadIndex = normalizeIndex(currentIndex + offset);
-        return {
-          beadIndex,
-          offset,
-          active: offset === 0,
-        };
-      }),
-    [currentIndex]
-  );
+  }, [currentIndex]);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[0.42fr_0.58fr]">
-      <div className="space-y-6 rounded-3xl border border-slate-300/20 bg-[#fff9ef] p-6 shadow-sm text-slate-900">
-        <div className="space-y-4">
-          <p className="text-sm font-medium uppercase tracking-[0.32em] text-[#9c7a58]">Jap Mala</p>
-          <h2 className="text-3xl font-semibold leading-tight">Simple mala counting</h2>
-          <p className="text-base leading-7 text-slate-600">
-            Tap anywhere on the mala area to move through the beads with calm, gentle rhythm.
-          </p>
-        </div>
-
-        <CounterPanel count={count} rounds={rounds} onReset={handleReset} />
+    <div className="h-screen w-screen bg-[#f8f0e5] flex overflow-hidden">
+      {/* LEFT PANEL */}
+      <div className="w-[42%] border-r border-[#d9c7aa]/40 bg-[#fffdf8] flex flex-col">
+        <CounterPanel
+          count={count}
+          rounds={rounds}
+          onReset={handleReset}
+        />
       </div>
 
-      <button
-        type="button"
+      {/* RIGHT PANEL */}
+      <div
         onClick={handleTap}
-        className="group relative flex min-h-105 w-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-slate-300/20 bg-[#f6efe4] px-4 py-6 text-left shadow-sm transition hover:border-[#b09372] sm:px-6"
-        aria-label="Tap to advance the mala count"
+        aria-label="Tap to advance mala"
+        style={{ WebkitTapHighlightColor: "transparent" }}
+        className="
+          relative
+          w-[58%]
+          bg-[#f8f0e5]
+          overflow-hidden
+          flex
+          items-center
+          justify-center
+          cursor-pointer
+          touch-manipulation
+          active:scale-[0.995]
+          transition-transform
+        "
       >
-        <div className="mb-4 flex w-full items-center justify-between rounded-3xl border border-slate-300/20 bg-white px-4 py-3 text-slate-700 sm:px-5">
-          <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-[#9c7a58]">Mala chain</p>
-            <p className="mt-1 text-base text-slate-700">Tap anywhere here to continue your practice.</p>
-          </div>
-          <div className="rounded-full bg-[#e6d4b6] px-3 py-1 text-sm text-slate-800">108 beads</div>
-        </div>
+        {/* THREAD */}
+        <div
+          className="
+            absolute
+            left-1/2
+            top-0
+            h-full
+            w-[8px]
+            -translate-x-1/2
+            rounded-full
+            bg-[#5f4631]/20
+            blur-[1px]
+            z-0
+          "
+        />
 
-        <div className="relative flex h-90 w-full max-w-60 flex-col items-center justify-center overflow-hidden">
-          <div className="absolute inset-x-0 top-1/2 h-px w-full bg-slate-200/50" />
-          {visibleBeads.map((bead) => (
-            <Bead
-              key={`${bead.beadIndex}-${bead.offset}`}
-              active={bead.active}
-              label={`Bead ${bead.beadIndex + 1}${bead.active ? ", active" : ""}`}
-              style={{ transform: `translateY(${bead.offset * 54}px)` }}
-            />
-          ))}
+        {/* MOVING STRAND */}
+        <div
+          className="
+            relative
+            h-screen
+            w-full
+            overflow-hidden
+          "
+        >
+          {visibleBeads.map((bead) => {
+            /**
+             * Main bead spacing
+             * lower value = more overlap
+             */
+            const baseY = bead.offset * 72;
+
+            /**
+             * CLICK ANIMATION:
+             * whole strand shifts downward
+             */
+            const animatedY = isAnimating ? baseY + 72 : baseY;
+
+            return (
+              <div
+                key={bead.id}
+                className="
+                  absolute
+                  left-1/2
+                  top-1/2
+                  transition-all
+                  duration-200
+                  ease-out
+                  pointer-events-none
+                "
+                style={{
+                  transform: `translate(-50%, calc(-50% + ${animatedY}px))`,
+                  zIndex: 100 - Math.abs(bead.offset),
+                }}
+              >
+                {/* BEAD */}
+                <div
+                  className={`
+                    relative
+                    transition-all
+                    duration-200
+                    ${bead.active
+                      ? `
+                          w-[210px]
+                          h-[210px]
+                          scale-[1.05]
+                        `
+                      : `
+                          w-[190px]
+                          h-[190px]
+                        `
+                    }
+                    ${isAnimating && bead.active
+                      ? "scale-[1.02] translate-y-[4px]"
+                      : ""
+                    }
+                  `}
+                >
+                  <Image
+                    src="/jap-page-icons/bead.png"
+                    alt={`Bead ${bead.beadIndex + 1}`}
+                    fill
+                    priority={bead.active}
+                    className={`
+                      object-contain
+                      select-none
+                      pointer-events-none
+                      transition-all
+                      duration-200
+                      ${bead.active
+                        ? `
+                            brightness-110
+                            drop-shadow-[0_10px_24px_rgba(0,0,0,0.20)]
+                          `
+                        : `
+                            opacity-95
+                            drop-shadow-[0_6px_14px_rgba(0,0,0,0.12)]
+                          `
+                      }
+                    `}
+                  />
+
+                  {/* DEPTH SHADOW */}
+                  <div
+                    className="
+                      absolute
+                      bottom-0
+                      left-1/2
+                      h-6
+                      w-24
+                      -translate-x-1/2
+                      rounded-full
+                      bg-black/10
+                      blur-md
+                    "
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </button>
+      </div>
     </div>
   );
 }
