@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -35,12 +36,12 @@ export default function Home() {
               Experience mantra chanting with virtual mala beads, calming ambience, and distraction-free focus.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <a
-                href="#experience"
+              <Link
+                href="/jap"
                 className="inline-flex items-center justify-center rounded-full bg-orange-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_-30px_rgba(255,169,87,0.9)] transition hover:-translate-y-0.5 hover:bg-orange-200"
               >
                 Start Chanting
-              </a>
+              </Link>
               <a
                 href="#features"
                 className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-orange-200/40 hover:bg-white/10"

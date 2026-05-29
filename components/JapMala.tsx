@@ -1,0 +1,219 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { CounterPanel } from "@/components/CounterPanel";
+
+const beadCount = 108;
+const visibleBeadCount = 10;
+const centerIndex = Math.floor(visibleBeadCount / 2);
+
+const beadSpacing = 95;
+const animationDuration = 180;
+
+function normalizeIndex(index: number) {
+  return ((index % beadCount) + beadCount) % beadCount;
+}
+
+export function JapMala() {
+  const [count, setCount] = useState(0);
+  const [rounds, setRounds] = useState(0);
+
+  // Logical mala position
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Animation state
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Visual translate offset
+  const [visualOffset, setVisualOffset] = useState(0);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // RESET
+  const handleReset = useCallback(() => {
+    setCount(0);
+    setRounds(0);
+    setCurrentIndex(0);
+    setVisualOffset(0);
+    setIsAnimating(false);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
+
+  // TAP HANDLER
+  const handleTap = useCallback(() => {
+    if (isAnimating) return;
+
+    setIsAnimating(true);
+
+    // Move beads DOWN visually
+    setVisualOffset(beadSpacing);
+
+    timeoutRef.current = setTimeout(() => {
+      // Update logical mala index
+      setCurrentIndex((prev) => normalizeIndex(prev + 1));
+
+      // Update counter
+      setCount((prev) => {
+        const next = prev + 1;
+
+        if (next >= beadCount) {
+          return -1;
+        }
+
+        return next;
+      });
+      // Reset visual offset instantly
+      // User won't notice because bead positions update
+      setVisualOffset(0);
+
+      setIsAnimating(false);
+
+      timeoutRef.current = null;
+    }, animationDuration);
+  }, [isAnimating]);
+
+  if (count == -1){
+    setRounds((rounds) => rounds + 1)
+    setCount(0)
+  }
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // ONLY visible beads
+  const visibleBeads = useMemo(
+    () =>
+      Array.from({ length: visibleBeadCount }, (_, position) => {
+        const offset = position - centerIndex;
+
+        return {
+          beadIndex: normalizeIndex(currentIndex + offset),
+          offset,
+          active: offset === 0,
+          id: `${position}`,
+        };
+      }),
+    [currentIndex]
+  );
+
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
+      {/* LEFT PANEL */}
+      <div className="w-[42%] bg-[#fffdf8] border-r border-[#d7c5a8]/40 flex flex-col">
+        <CounterPanel
+          count={count}
+          rounds={rounds}
+          onReset={handleReset}
+        />
+      </div>
+
+      {/* RIGHT PANEL */}
+      <div
+        onClick={handleTap}
+        aria-label="Tap to advance mala"
+        style={{ WebkitTapHighlightColor: "transparent" }}
+        className="
+          relative
+          w-[58%]
+          overflow-hidden
+          bg-[#f8f0e5]
+          flex
+          items-center
+          justify-center
+          touch-manipulation
+          cursor-pointer
+          active:scale-[0.995]
+          transition-transform
+        "
+      >
+        {/* THREAD */}
+        <div
+          className="
+            absolute
+            left-1/2
+            top-0
+            h-full
+            w-[3px]
+            -translate-x-1/2
+            bg-[#6f533d]/20
+            rounded-full
+            z-0
+          "
+        />
+
+        {/* BEAD COLUMN */}
+        <div className="relative h-full w-full overflow-hidden">
+          {visibleBeads.map((bead) => {
+            // CONTINUOUS FLOW
+            const baseY =
+              bead.offset * beadSpacing + visualOffset;
+
+            return (
+              <div
+                key={bead.id}
+                className={`
+                  absolute
+                  left-1/2
+                  top-1/2
+                  pointer-events-none
+                  ${isAnimating
+                    ? "transition-transform duration-200 ease-out"
+                    : ""
+                  }
+                `}
+                style={{
+                  transform: `translate(-50%, calc(-50% + ${baseY}px))`,
+                  zIndex: 100 - Math.abs(bead.offset),
+                }}
+              >
+                {/* BEAD */}
+                <div
+                  className="
+                    relative
+                    transition-all
+                    duration-200
+                    ease-out
+                  "
+                  style={{
+                    width: bead.active ? 260 : 230,
+                    height: bead.active ? 260 : 230,
+                  }}
+                >
+                  <Image
+                    src="/jap-page-icons/bead.png"
+                    alt={`Bead ${bead.beadIndex + 1}`}
+                    fill
+                    priority={bead.active}
+                    draggable={false}
+                    className={`
+                      object-contain
+                      select-none
+                      pointer-events-none
+                      transition-all
+                      duration-200
+                      ${bead.active
+                        ? "brightness-115"
+                        : "opacity-95"
+                      }
+                    `}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
