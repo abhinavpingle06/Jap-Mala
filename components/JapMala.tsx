@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CounterPanel } from "@/components/CounterPanel";
 
 const beadCount = 108;
-const visibleBeadCount = 7;
+const visibleBeadCount = 10;
 const centerIndex = Math.floor(visibleBeadCount / 2);
+
+const beadSpacing = 95;
+const animationDuration = 180;
 
 function normalizeIndex(index: number) {
   return ((index % beadCount) + beadCount) % beadCount;
@@ -16,69 +19,98 @@ export function JapMala() {
   const [count, setCount] = useState(0);
   const [rounds, setRounds] = useState(0);
 
-  /**
-   * currentIndex = current active bead
-   */
+  // Logical mala position
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  /**
-   * animation trigger
-   */
+  // Animation state
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Visual translate offset
+  const [visualOffset, setVisualOffset] = useState(0);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // RESET
   const handleReset = useCallback(() => {
     setCount(0);
     setRounds(0);
     setCurrentIndex(0);
+    setVisualOffset(0);
+    setIsAnimating(false);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, []);
 
-  const handleTap = () => {
+  // TAP HANDLER
+  const handleTap = useCallback(() => {
     if (isAnimating) return;
 
     setIsAnimating(true);
 
-    /**
-     * AFTER animation completes:
-     * move actual bead data
-     */
-    setTimeout(() => {
+    // Move beads DOWN visually
+    setVisualOffset(beadSpacing);
+
+    timeoutRef.current = setTimeout(() => {
+      // Update logical mala index
       setCurrentIndex((prev) => normalizeIndex(prev + 1));
 
+      // Update counter
       setCount((prev) => {
         const next = prev + 1;
 
         if (next >= beadCount) {
-          setRounds((r) => r + 1);
-          return 0;
+          return -1;
         }
 
         return next;
       });
+      // Reset visual offset instantly
+      // User won't notice because bead positions update
+      setVisualOffset(0);
 
       setIsAnimating(false);
-    }, 180);
-  };
 
-  /**
-   * Visible beads
-   */
-  const visibleBeads = useMemo(() => {
-    return Array.from({ length: visibleBeadCount }, (_, position) => {
-      const offset = position - centerIndex;
+      timeoutRef.current = null;
+    }, animationDuration);
+  }, [isAnimating]);
 
-      return {
-        beadIndex: normalizeIndex(currentIndex + offset),
-        offset,
-        active: offset === 0,
-        id: `${currentIndex}-${position}`,
-      };
-    });
-  }, [currentIndex]);
+  if (count == -1){
+    setRounds((rounds) => rounds + 1)
+    setCount(0)
+  }
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // ONLY visible beads
+  const visibleBeads = useMemo(
+    () =>
+      Array.from({ length: visibleBeadCount }, (_, position) => {
+        const offset = position - centerIndex;
+
+        return {
+          beadIndex: normalizeIndex(currentIndex + offset),
+          offset,
+          active: offset === 0,
+          id: `${position}`,
+        };
+      }),
+    [currentIndex]
+  );
 
   return (
-    <div className="h-screen w-screen bg-[#f8f0e5] flex overflow-hidden">
+    <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
       {/* LEFT PANEL */}
-      <div className="w-[42%] border-r border-[#d9c7aa]/40 bg-[#fffdf8] flex flex-col">
+      <div className="w-[42%] bg-[#fffdf8] border-r border-[#d7c5a8]/40 flex flex-col">
         <CounterPanel
           count={count}
           rounds={rounds}
@@ -94,13 +126,13 @@ export function JapMala() {
         className="
           relative
           w-[58%]
-          bg-[#f8f0e5]
           overflow-hidden
+          bg-[#f8f0e5]
           flex
           items-center
           justify-center
-          cursor-pointer
           touch-manipulation
+          cursor-pointer
           active:scale-[0.995]
           transition-transform
         "
@@ -112,82 +144,58 @@ export function JapMala() {
             left-1/2
             top-0
             h-full
-            w-[8px]
+            w-[3px]
             -translate-x-1/2
+            bg-[#6f533d]/20
             rounded-full
-            bg-[#5f4631]/20
-            blur-[1px]
             z-0
           "
         />
 
-        {/* MOVING STRAND */}
-        <div
-          className="
-            relative
-            h-screen
-            w-full
-            overflow-hidden
-          "
-        >
+        {/* BEAD COLUMN */}
+        <div className="relative h-full w-full overflow-hidden">
           {visibleBeads.map((bead) => {
-            /**
-             * Main bead spacing
-             * lower value = more overlap
-             */
-            const baseY = bead.offset * 72;
-
-            /**
-             * CLICK ANIMATION:
-             * whole strand shifts downward
-             */
-            const animatedY = isAnimating ? baseY + 72 : baseY;
+            // CONTINUOUS FLOW
+            const baseY =
+              bead.offset * beadSpacing + visualOffset;
 
             return (
               <div
                 key={bead.id}
-                className="
+                className={`
                   absolute
                   left-1/2
                   top-1/2
-                  transition-all
-                  duration-200
-                  ease-out
                   pointer-events-none
-                "
+                  ${isAnimating
+                    ? "transition-transform duration-200 ease-out"
+                    : ""
+                  }
+                `}
                 style={{
-                  transform: `translate(-50%, calc(-50% + ${animatedY}px))`,
+                  transform: `translate(-50%, calc(-50% + ${baseY}px))`,
                   zIndex: 100 - Math.abs(bead.offset),
                 }}
               >
                 {/* BEAD */}
                 <div
-                  className={`
+                  className="
                     relative
                     transition-all
                     duration-200
-                    ${bead.active
-                      ? `
-                          w-[210px]
-                          h-[210px]
-                          scale-[1.05]
-                        `
-                      : `
-                          w-[190px]
-                          h-[190px]
-                        `
-                    }
-                    ${isAnimating && bead.active
-                      ? "scale-[1.02] translate-y-[4px]"
-                      : ""
-                    }
-                  `}
+                    ease-out
+                  "
+                  style={{
+                    width: bead.active ? 260 : 230,
+                    height: bead.active ? 260 : 230,
+                  }}
                 >
                   <Image
                     src="/jap-page-icons/bead.png"
                     alt={`Bead ${bead.beadIndex + 1}`}
                     fill
                     priority={bead.active}
+                    draggable={false}
                     className={`
                       object-contain
                       select-none
@@ -195,31 +203,10 @@ export function JapMala() {
                       transition-all
                       duration-200
                       ${bead.active
-                        ? `
-                            brightness-110
-                            drop-shadow-[0_10px_24px_rgba(0,0,0,0.20)]
-                          `
-                        : `
-                            opacity-95
-                            drop-shadow-[0_6px_14px_rgba(0,0,0,0.12)]
-                          `
+                        ? "brightness-115"
+                        : "opacity-95"
                       }
                     `}
-                  />
-
-                  {/* DEPTH SHADOW */}
-                  <div
-                    className="
-                      absolute
-                      bottom-0
-                      left-1/2
-                      h-6
-                      w-24
-                      -translate-x-1/2
-                      rounded-full
-                      bg-black/10
-                      blur-md
-                    "
                   />
                 </div>
               </div>

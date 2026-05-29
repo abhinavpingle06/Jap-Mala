@@ -15,6 +15,9 @@ const nextConfig = {
   turbopack: {},
 };
 
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
 // next-pwa manages a service worker for offline caching and installability.
 // This service worker precaches static pages, assets, and the PWA manifest so the landing page,
 // login, and signup screens remain available even when the network drops.
