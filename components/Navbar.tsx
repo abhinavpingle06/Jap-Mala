@@ -17,9 +17,9 @@ export function Navbar({ links }: NavbarProps) {
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6 md:px-8"
+      className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6 md:px-2 md:pt-8"
     >
-      <a href="#top" className="font-semibold tracking-tight text-slate-100">
+      <a href="#top" className=" font-serif font-bold text-2xl tracking-tight text-orange-300/90">
         Virtual Jap Mala
       </a>
       <div className="flex items-center gap-8">
@@ -35,7 +35,7 @@ export function Navbar({ links }: NavbarProps) {
           ))}
         </div>
         <a
-          href="#experience"
+          href="/jap"
           className="rounded-full border border-orange-300/20 bg-orange-300/10 px-5 py-2.5 text-sm font-semibold text-orange-100 transition hover:border-orange-200/40 hover:bg-orange-300/15"
         >
           Start Chanting
