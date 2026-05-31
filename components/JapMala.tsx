@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CounterPanel } from "@/components/CounterPanel";
+import { navigate } from "next/dist/client/components/segment-cache/navigation";
 
 const beadCount = 108;
-const visibleBeadCount = 10;
+const visibleBeadCount = 9;
 const centerIndex = Math.floor(visibleBeadCount / 2);
 
 const beadSpacing = 95;
@@ -29,6 +30,17 @@ export function JapMala() {
   const [visualOffset, setVisualOffset] = useState(0);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const beadAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(()=>{
+    const audio = new Audio("audios/beads_audio1.mp3")
+    audio.preload = "auto";
+    audio.volume = 1;
+    audio.load();
+    beadAudioRef.current = audio
+  },[])
+
+  const columnOffset = -80;
 
   // RESET
   const handleReset = useCallback(() => {
@@ -44,11 +56,31 @@ export function JapMala() {
     }
   }, []);
 
+  // VIBRATION HANDLER
+  const OnclickVibrate = () => {
+    if(typeof window == "undefined") return
+
+    const nav = navigator as Navigator & {
+      vibrate?: (pattern: number | number[]) => boolean;
+    };
+
+    nav.vibrate?.(15);
+  }
+
   // TAP HANDLER
   const handleTap = useCallback(() => {
     if (isAnimating) return;
 
     setIsAnimating(true);
+  
+    // VIBRATIONS
+    OnclickVibrate()
+
+    // BEADS AUDIO
+    if (beadAudioRef.current) {
+      beadAudioRef.current.currentTime = 0;
+      beadAudioRef.current.play().catch(() => { });
+    }
 
     // Move beads DOWN visually
     setVisualOffset(beadSpacing);
@@ -61,7 +93,7 @@ export function JapMala() {
       setCount((prev) => {
         const next = prev + 1;
 
-        if (next >= beadCount) {
+        if (next > beadCount) {
           return -1;
         }
 
@@ -110,7 +142,7 @@ export function JapMala() {
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
       {/* LEFT PANEL */}
-      <div className="w-[42%] bg-[#fffdf8] border-r border-[#d7c5a8]/40 flex flex-col">
+      <div className="w-[42%] bg-[#ffead0] border-r border-[#d7c5a8]/40 flex flex-col">
         <CounterPanel
           count={count}
           rounds={rounds}
@@ -173,7 +205,7 @@ export function JapMala() {
                   }
                 `}
                 style={{
-                  transform: `translate(-50%, calc(-50% + ${baseY}px))`,
+                  transform: `translate(-50%, calc(-50% + ${baseY + columnOffset}px))`,
                   zIndex: 100 - Math.abs(bead.offset),
                 }}
               >
@@ -203,7 +235,7 @@ export function JapMala() {
                       transition-all
                       duration-200
                       ${bead.active
-                        ? "brightness-115"
+                        ? "brightness-125"
                         : "opacity-95"
                       }
                     `}
