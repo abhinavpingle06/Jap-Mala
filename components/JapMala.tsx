@@ -40,7 +40,7 @@ export function JapMala() {
     beadAudioRef.current = audio
   },[])
 
-  const columnOffset = -80;
+  const columnOffset = -50;
 
   // RESET
   const handleReset = useCallback(() => {
