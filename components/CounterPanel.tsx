@@ -17,19 +17,19 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
       <div className="space-y-8">
         {/* Current Count */}
         <div className="border-b border-slate-200/60 pb-6">
-          <p className="text-md font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Current Count</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Current Count</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{count}</p>
         </div>
 
         {/* Rounds Info */}
         <div className="border-b border-slate-200/60 pb-6">
-          <p className="text-md font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{rounds}</p>
         </div>
 
         {/* Mala Type */}
         <div className="pb-1">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Mala Type</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Mala Type</p>
           <p className="text-xl sm:text-xl font-semibold text-slate-700">108 Beads</p>
         </div>
 
