@@ -89,7 +89,7 @@ export default function Home() {
             <div className="mt-8 space-y-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
               {[
                 "No ads / clean interface",
-                "Peaceful dark UI tuned for focus",
+                "Peaceful bright UI tuned for focus",
                 "Works offline and installable like an app",
                 "Modern, intentionally calm spiritual experience",
               ].map((item) => (
