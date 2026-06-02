@@ -8,6 +8,7 @@ import { FeatureCard } from "@/components/FeatureCard";
 import { HeroVisual } from "@/components/HeroVisual";
 import { MobilePreview } from "@/components/MobilePreview";
 import { featureItems, navLinks } from "@/lib/siteData";
+import VerticalSlider from "@/components/Swiper";
 
 export default function Home() {
   return (
@@ -52,7 +53,8 @@ export default function Home() {
           </motion.div>
 
           <div className="flex justify-center lg:justify-end">
-            <HeroVisual />
+            {/* <HeroVisual /> */}
+            <VerticalSlider/>
           </div>
         </section>
 
