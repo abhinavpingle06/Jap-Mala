@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { MantraKey, MANTRAS } from "./Mantras";
 import { MantraDisplay } from "./MantraPanel";
+import { useStopwatch } from "react-timer-hook";
+import { Volume2, Vibrate, Music } from "lucide-react";
 
 type CounterPanelProps = {
   count: number;
@@ -8,13 +10,31 @@ type CounterPanelProps = {
   onReset: () => void;
 };
 
+// StopWatch Function
+const StopWatch = () => {
+  const {
+    seconds,
+    minutes,
+    hours,
+    days,
+  } = useStopwatch({ autoStart: true });
+
+  return (
+    <div className="text-xl sm:text-2xl font-semibold text-slate-700">
+      {String(hours).padStart(2, "0")}:
+      {String(minutes).padStart(2, "0")}:
+      {String(seconds).padStart(2, "0")}
+    </div>
+  )
+}
+
 export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
   const [showMantraSelector, setShowMantraSelector] = useState(false);
   const [selectedMantra, setSelectedMantra] = useState<MantraKey>("hareKrishna");
   return (
     <div className="h-full flex flex-col justify-between p-6 sm:p-8 text-slate-900">
       {/* Top counter info */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Current Count */}
         <div className="border-b border-slate-200/60 pb-6">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Current Count</p>
@@ -29,8 +49,28 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
 
         {/* Mala Type */}
         <div className="pb-1">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Mala Type</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Mala Type</p>
           <p className="text-xl sm:text-xl font-semibold text-slate-700">108 Beads</p>
+        </div>
+        <div className="border-b border-slate-200/6">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Samay</p>
+          {StopWatch()}
+        </div>
+        <div className="flex gap-1">
+          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Volume2 size={16} />
+            <span className="text-[9px] mt-1">Beads</span>
+          </button>
+
+          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Vibrate size={16} />
+            <span className="text-[9px] mt-1">Vibration</span>
+          </button>
+
+          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Music size={16} />
+            <span className="text-[9px] mt-1">Music</span>
+          </button>
         </div>
 
         {/* Change Mantra */}
@@ -44,7 +84,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           </button>
           {
             showMantraSelector && (
-              <div className="fixed z-10 inset-100 bg-black/30 flex flex-col items-center justify-center ">
+              <div className="fixed z-10 inset-0 bg-black/30 flex flex-col items-center justify-center ">
                 <div className="bg-white flex flex-col items-center rounded-2xl p-6 w-[90%] max-w-sm">
                   <h2 className="bg-orange-300 py-2 px-3 rounded-2xl font-medium uppercase tracking-[0.1em]">Select Mantra</h2>
 
@@ -77,11 +117,6 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
         >
           Reset
         </button>
-
-        {/* Peaceful text */}
-        <p className="text-xs leading-6 text-slate-500 text-center">
-          Chant with peace and focus.
-        </p>
       </div>
     </div>
   );

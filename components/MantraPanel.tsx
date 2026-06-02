@@ -33,7 +33,7 @@ export function MantraDisplay({
 
             <p
                 className="
-          text-lg sm:text-2xl
+          text-sm sm:text-2xl
           font-semibold
           leading-relaxed
           text-slate-900
