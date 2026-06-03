@@ -90,7 +90,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           </button>
           {
             showMantraSelector && (
-              <div className="fixed z-10 inset-0 bg-black/30 flex flex-col items-center justify-center ">
+              <div className="fixed z-50 inset-0 bg-black/30 flex flex-col items-center justify-center ">
                 <div className="bg-white flex flex-col items-center rounded-2xl p-6 w-[90%] max-w-sm">
                   <h2 className="bg-orange-300 py-2 px-3 rounded-2xl font-medium uppercase tracking-[0.1em]">Select Mantra</h2>
 
