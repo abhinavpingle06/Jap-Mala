@@ -38,7 +38,7 @@ export default function Home() {
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
               <Link
-                href="/jap"
+                href="/login"
                 className="inline-flex items-center justify-center rounded-full bg-orange-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_-30px_rgba(255,169,87,0.9)] transition hover:-translate-y-0.5 hover:bg-orange-200"
               >
                 Start Chanting
