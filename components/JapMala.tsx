@@ -7,6 +7,7 @@ import { navigate } from "next/dist/client/components/segment-cache/navigation";
 
 const beadCount = 108;
 const visibleBeadCount = 9;
+const topBeadIndx = beadCount - (visibleBeadCount/2); //103
 const centerIndex = Math.floor(visibleBeadCount / 2);
 
 const beadSpacing = 95;
@@ -19,6 +20,9 @@ function normalizeIndex(index: number) {
 export function JapMala() {
   const [count, setCount] = useState(0);
   const [rounds, setRounds] = useState(0);
+
+  // Main Bead Position
+  const [location, setLocation] = useState(5);
 
   // Logical mala position
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,6 +53,7 @@ export function JapMala() {
     setCurrentIndex(0);
     setVisualOffset(0);
     setIsAnimating(false);
+    setLocation(5);
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -89,10 +94,11 @@ export function JapMala() {
       // Update logical mala index
       setCurrentIndex((prev) => normalizeIndex(prev + 1));
 
+      // Update Location
+      setLocation((prev) => (prev + 1))
       // Update counter
       setCount((prev) => {
         const next = prev + 1;
-
         if (next > beadCount) {
           return -1;
         }
@@ -100,6 +106,9 @@ export function JapMala() {
         return next;
       });
       // Reset visual offset instantly
+      if(count == 103){
+        setLocation(0);
+      }
       // User won't notice because bead positions update
       setVisualOffset(0);
 
@@ -186,7 +195,7 @@ export function JapMala() {
 
         {/* BEAD COLUMN */}
         <div className="relative h-full w-full overflow-hidden">
-          {visibleBeads.map((bead) => {
+          {visibleBeads.map((bead,idx) => {
             // CONTINUOUS FLOW
             const baseY =
               bead.offset * beadSpacing + visualOffset;
@@ -222,24 +231,42 @@ export function JapMala() {
                     height: bead.active ? 260 : 230,
                   }}
                 >
-                  <Image
-                    src="/jap-page-icons/bead.png"
-                    alt={`Bead ${bead.beadIndex + 1}`}
-                    fill
-                    priority={bead.active}
-                    draggable={false}
-                    className={`
+                  {(count < 5 || count >= topBeadIndx) && idx == location ? (
+                    <Image
+                      src="/jap-page-icons/108bead.png"
+                      alt={`Bead ${bead.beadIndex + 1}`}
+                      fill
+                      priority={bead.active}
+                      draggable={false}
+                      className={`
+                      object-contain
+                      select-none
+                      pointer-events-none
+                      transition-all
+                      duration-200
+                    `}
+                    />
+                  ) : (
+                      <Image
+                    src = "/jap-page-icons/bead.png"
+                    alt = {`Bead ${bead.beadIndex + 1}`}
+                  fill
+                  priority={bead.active}
+                  draggable={false}
+                  className={`
                       object-contain
                       select-none
                       pointer-events-none
                       transition-all
                       duration-200
                       ${bead.active
-                        ? "brightness-125"
-                        : "opacity-95"
-                      }
+                      ? "brightness-130"
+                      : "opacity-95"
+                    }
                     `}
                   />
+                  )}
+                  
                 </div>
               </div>
             );

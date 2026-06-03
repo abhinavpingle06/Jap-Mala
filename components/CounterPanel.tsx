@@ -10,6 +10,12 @@ type CounterPanelProps = {
   onReset: () => void;
 };
 
+const handelConfiguration = (button:string) => {
+  if(button == "bead"){
+    return 
+  }
+}
+
 // StopWatch Function
 const StopWatch = () => {
   const {
@@ -36,13 +42,13 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
       {/* Top counter info */}
       <div className="space-y-6">
         {/* Current Count */}
-        <div className="border-b border-slate-200/60 pb-6">
+        <div className="border-b border-slate-200/60 ">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Current Count</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{count}</p>
         </div>
 
         {/* Rounds Info */}
-        <div className="border-b border-slate-200/60 pb-6">
+        <div className="border-b border-slate-200/60 pb-3">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{rounds}</p>
         </div>
@@ -57,17 +63,17 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           {StopWatch()}
         </div>
         <div className="flex gap-1">
-          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+          <button onClick={() => handelConfiguration("bead")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
             <Volume2 size={16} />
             <span className="text-[9px] mt-1">Beads</span>
           </button>
 
-          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+          <button onClick={() => handelConfiguration("vibrate")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
             <Vibrate size={16} />
             <span className="text-[9px] mt-1">Vibration</span>
           </button>
 
-          <button className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+          <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
             <Music size={16} />
             <span className="text-[9px] mt-1">Music</span>
           </button>
