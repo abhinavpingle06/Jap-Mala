@@ -6,7 +6,7 @@ import { CounterPanel } from "@/components/CounterPanel";
 import { navigate } from "next/dist/client/components/segment-cache/navigation";
 
 const beadCount = 108;
-const visibleBeadCount = 9;
+const visibleBeadCount = 10;
 const topBeadIndx = beadCount - (visibleBeadCount/2); //103
 const centerIndex = Math.floor(visibleBeadCount / 2);
 
@@ -55,10 +55,10 @@ export function JapMala() {
     setIsAnimating(false);
     setLocation(5);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+    // if (timeoutRef.current) {
+    //   clearTimeout(timeoutRef.current);
+    //   timeoutRef.current = null;
+    // }
   }, []);
 
   // VIBRATION HANDLER

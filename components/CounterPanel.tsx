@@ -53,32 +53,6 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{rounds}</p>
         </div>
 
-        {/* Mala Type */}
-        <div className="pb-1">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Mala Type</p>
-          <p className="text-xl sm:text-xl font-semibold text-slate-700">108 Beads</p>
-        </div>
-        <div className="border-b border-slate-200/6">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Samay</p>
-          {StopWatch()}
-        </div>
-        <div className="flex gap-1">
-          <button onClick={() => handelConfiguration("bead")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Volume2 size={16} />
-            <span className="text-[9px] mt-1">Beads</span>
-          </button>
-
-          <button onClick={() => handelConfiguration("vibrate")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Vibrate size={16} />
-            <span className="text-[9px] mt-1">Vibration</span>
-          </button>
-
-          <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Music size={16} />
-            <span className="text-[9px] mt-1">Music</span>
-          </button>
-        </div>
-
         {/* Change Mantra */}
         <div className="flex flex-col items-center">
           <MantraDisplay mantraKey={selectedMantra} />
@@ -111,6 +85,34 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
             )
           }
         </div>
+
+        {/* Mala Type */}
+        <div className="">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Mala Type</p>
+          <p className="text-xl sm:text-xl font-semibold text-slate-700">108 Beads</p>
+        </div>
+        <div className="border-b border-slate-200/6">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Samay</p>
+          {StopWatch()}
+        </div>
+        <div className="flex gap-1 pb-1">
+          <button onClick={() => handelConfiguration("bead")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Volume2 size={16} />
+            <span className="text-[9px] mt-1">Beads</span>
+          </button>
+
+          <button onClick={() => handelConfiguration("vibrate")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Vibrate size={16} />
+            <span className="text-[9px] mt-1">Vibration</span>
+          </button>
+
+          <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
+            <Music size={16} />
+            <span className="text-[9px] mt-1">Music</span>
+          </button>
+        </div>
+
+        
       </div>
 
       {/* Bottom section */}
