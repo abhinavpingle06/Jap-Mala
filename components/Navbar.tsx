@@ -35,7 +35,7 @@ export function Navbar({ links }: NavbarProps) {
           ))}
         </div>
         <a
-          href="/jap"
+          href="/login"
           className="rounded-full border border-orange-300/20 bg-orange-300/10 px-5 py-2.5 text-sm font-semibold text-orange-100 transition hover:border-orange-200/40 hover:bg-orange-300/15"
         >
           Start Chanting

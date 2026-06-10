@@ -12,12 +12,12 @@ export function MantraDisplay({
     return (
         <div
             className="
-        pb-4 sm:pb-6
+        pb-2 sm:pb-6
         rounded-2xl
         border
         border-slate-200
         text-center
-        px-2 sm:px-0
+        px-3 sm:px-2
       "
         >
             <p
