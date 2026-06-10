@@ -151,8 +151,8 @@ export function JapMala() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
-      <div onClick={()=> (window.location.href = "/dashboard")} className="z-50 fixed m-4 top-3 right-4 flex justify-end w-full">
-        <div className="rounded-2xl hover:cursor-pointer bg-green-400 p-3"><Home size={20} className="text-white" /></div>
+      <div onClick={()=> (window.location.href = "/dashboard")} className="z-50 fixed m-1 lg:m-4 top-3 right-1 lg:right-4 flex justify-end w-full">
+        <div className="rounded-2xl hover:cursor-pointer bg-amber-950/70 p-1 lg:p-3"><Home size={20} className="text-white" /></div>
       </div>
       {/* LEFT PANEL */}
       <div className="w-[42%] bg-[#ffead0] border-r border-[#d7c5a8]/40 flex flex-col">
