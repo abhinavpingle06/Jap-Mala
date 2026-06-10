@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CounterPanel } from "@/components/CounterPanel";
 import { navigate } from "next/dist/client/components/segment-cache/navigation";
+import { Home } from "lucide-react";
 
 const beadCount = 108;
 const visibleBeadCount = 9;
@@ -150,6 +151,9 @@ export function JapMala() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
+      <div onClick={()=> (window.location.href = "/dashboard")} className="z-50 fixed m-4 top-3 right-4 flex justify-end w-full">
+        <div className="rounded-2xl hover:cursor-pointer bg-green-400 p-3"><Home size={20} className="text-white" /></div>
+      </div>
       {/* LEFT PANEL */}
       <div className="w-[42%] bg-[#ffead0] border-r border-[#d7c5a8]/40 flex flex-col">
         <CounterPanel
