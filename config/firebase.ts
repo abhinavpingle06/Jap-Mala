@@ -1,7 +1,12 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
-const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG!);
+let firebaseConfig;
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+try {
+    firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG || "{}");
+} catch (error) {
+    console.warn("Firebase config parsing failed, using empty config", error);
+    firebaseConfig = {};
+}
+
+export const app = firebaseConfig.projectId ? initializeApp(firebaseConfig) : undefined;

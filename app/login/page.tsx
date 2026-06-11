@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, UserCircle2 } from "lucide-react";
 import { AuthCard } from "@/components/AuthCard";
@@ -8,7 +8,7 @@ import { GlowBackground } from "@/components/GlowBackground";
 import { InputField } from "@/components/InputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { app } from "@/config/firebase";
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth } from "firebase/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,9 +17,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+  const [auth , setAuth] = useState<Auth | undefined>(undefined)
+
+  useEffect(()=> {
+      const auth = getAuth(app);
+      setAuth(auth)
+      const provider = new GoogleAuthProvider();
+    })
 
   const handleGoogleLogin = async () => {
     try {
@@ -29,7 +33,7 @@ export default function LoginPage() {
         new GoogleAuthProvider();
 
       await signInWithPopup(
-        auth,
+        auth!,
         provider
       );
 
@@ -54,7 +58,7 @@ export default function LoginPage() {
     try {
       const userCredential =
         await signInWithEmailAndPassword(
-          auth,
+          auth!,
           email.trim(),
           password
         );
@@ -62,7 +66,7 @@ export default function LoginPage() {
       await userCredential.user.reload();
 
       if (!userCredential.user.emailVerified) {
-        await auth.signOut();
+        await auth!.signOut();
         await sendEmailVerification(userCredential.user);
 
         setError(

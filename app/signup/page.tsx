@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthCard } from "@/components/AuthCard";
 import { GlowBackground } from "@/components/GlowBackground";
 import { InputField } from "@/components/InputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth } from "firebase/auth";
 import { app } from "@/config/firebase";
 
 export default function SignupPage() {
@@ -18,22 +18,25 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [auth , setAuth] = useState<Auth | undefined>(undefined)
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-
+  useEffect(()=> {
+    const auth = getAuth(app);
+    setAuth(auth)
+    const provider = new GoogleAuthProvider();
+  })
+  
   const handleGoogleLogin = async () => {
     try {
       setError("");
 
-      const provider =
+      const provider = 
         new GoogleAuthProvider();
 
       await signInWithPopup(
-        auth,
+        auth!,
         provider
       );
 
@@ -77,7 +80,7 @@ export default function SignupPage() {
       }
 
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        auth!,
         email.trim(),
         password
       );
