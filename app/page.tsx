@@ -14,6 +14,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#05040f] text-slate-100">
       <div className="pointer-events-none absolute left-1/2 top-0 h-192 w-3xl -translate-x-1/2 rounded-full bg-orange-500/10 blur-3xl" />
+      <div className="fixed z-200 pointer-events-none bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-orange-400/60 via-orange-500/5 to-transparent blur-xl" />
       <div className="pointer-events-none absolute right-0 top-24 h-80 w-80 rounded-full bg-slate-400/5 blur-3xl" />
       <div className="pointer-events-none absolute left-0 bottom-0 h-72 w-72 rounded-full bg-orange-400/5 blur-3xl" />
 

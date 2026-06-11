@@ -40,15 +40,15 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
   return (
     <div className="h-full flex flex-col justify-between p-6 sm:p-8 text-slate-900">
       {/* Top counter info */}
-      <div className="space-y-6">
+      <div className="space-y-3">
         {/* Current Count */}
-        <div className="border-b border-slate-200/60 ">
+        <div className=" ">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Current Count</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{count}</p>
         </div>
 
         {/* Rounds Info */}
-        <div className="border-b border-slate-200/60 pb-3">
+        <div className="">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds</p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{rounds}</p>
         </div>
@@ -58,15 +58,15 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           <MantraDisplay mantraKey={selectedMantra} />
           <button
             onClick={() => setShowMantraSelector(true)}
-            className="pb-5 font-medium uppercase tracking-[0.1em]"
+            className="p-1 px-2 rounded-2xl font-medium uppercase tracking-[0.1em] border border-orange-400 bg-orange-400/60"
           >
             Select Mantra
           </button>
           {
             showMantraSelector && (
-              <div className="fixed z-50 inset-0 bg-black/30 flex flex-col items-center justify-center ">
+              <div className="fixed z-200 inset-0 bg-black/30 flex flex-col items-center justify-center ">
                 <div className="bg-white flex flex-col items-center rounded-2xl p-6 w-[90%] max-w-sm">
-                  <h2 className="bg-orange-300 py-2 px-3 rounded-2xl font-medium uppercase tracking-[0.1em]">Select Mantra</h2>
+                  <h2 className="bg-orange-300 py-2 px-3 mb-2 rounded-2xl font-medium uppercase tracking-[0.1em]">Select Mantra</h2>
 
                   {Object.entries(MANTRAS).map(([key, mantra]) => (
                     <button
@@ -75,7 +75,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
                         setSelectedMantra(key as MantraKey);
                         setShowMantraSelector(false);
                       }}
-                      className="w-full text-left m-2 p-2 rounded-lg hover:bg-orange-200"
+                      className="w-full text-left m-1 p-2 rounded-lg border border-b-3 border-amber-600 hover:bg-amber-300"
                     >
                       {mantra.title}
                     </button>
@@ -95,29 +95,30 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-1">Samay</p>
           {StopWatch()}
         </div>
-        <div className="flex gap-1 pb-1">
-          <button onClick={() => handelConfiguration("bead")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Volume2 size={16} />
-            <span className="text-[9px] mt-1">Beads</span>
-          </button>
-
-          <button onClick={() => handelConfiguration("vibrate")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Vibrate size={16} />
-            <span className="text-[9px] mt-1">Vibration</span>
-          </button>
-
-          <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-slate-200">
-            <Music size={16} />
-            <span className="text-[9px] mt-1">Music</span>
-          </button>
-        </div>
+        
 
         
       </div>
 
       {/* Bottom section */}
-      <div className="flex flex-col items-center space-y-4">
+      <div className="flex flex-col items-center space-y-4 max-w-full">
         {/* Reset Button */}
+        <div className="flex gap-1 lg:gap-4 pb-1 lg:w-xl w-auto">
+          <button onClick={() => handelConfiguration("bead")} className="hover:bg-amber-300 flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400 ">
+            <Volume2 size={16} />
+            <span className="text-[9px] mt-1">Beads</span>
+          </button>
+
+          <button onClick={() => handelConfiguration("vibrate")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400">
+            <Vibrate size={16} />
+            <span className="text-[9px] mt-1">Vibration</span>
+          </button>
+
+          <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400">
+            <Music size={16} />
+            <span className="text-[9px] mt-1">Music</span>
+          </button>
+        </div>
         <button
           type="button"
           onClick={onReset}
