@@ -38,16 +38,16 @@ jobs:
           key: ${{ secrets.SSH_TOKEN }}
           script: |
             cd /home/ubuntu/my-app
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-            docker pull $IMAGE_NAME
-            docker stop naam-jaap || true
-            docker rm naam-jaap || true
-            docker run -d \
+            sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            sudo docker pull ${{ secrets.IMAGE_NAME }}
+            sudo docker stop naam-jaap || true
+            sudo docker rm naam-jaap || true
+            sudo docker run -d \
               --name naam-jaap \
               --env-file .env.local \
               --restart unless-stopped \
               -p 3000:3000 \
-              $IMAGE_NAME
+              ${{ secrets.IMAGE_NAME }}
 
 
 
