@@ -58,7 +58,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           <MantraDisplay mantraKey={selectedMantra} />
           <button
             onClick={() => setShowMantraSelector(true)}
-            className="p-1 px-2 rounded-2xl font-medium uppercase tracking-[0.1em] border border-orange-400 bg-orange-400/60"
+            className="p-1 mt-1 text-xs lg:text-lg px-2 rounded-2xl font-medium uppercase tracking-[0.1em] border border-orange-400 bg-orange-400/60"
           >
             Select Mantra
           </button>
