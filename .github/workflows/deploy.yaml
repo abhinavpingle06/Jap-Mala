@@ -24,7 +24,9 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME .
+          docker build \
+          --build-arg NEXT_PUBLIC_FIREBASE_CONFIG="${{ secrets.NEXT_PUBLIC_FIREBASE_CONFIG }}" \
+          -t $IMAGE_NAME .
 
       - name: Push Docker Image
         run: |
