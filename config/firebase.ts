@@ -12,4 +12,4 @@ const firebaseConfig = {
 export const app =
     getApps().length
         ? getApp()
-        : initializeApp(JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG!));
+        : initializeApp(firebaseConfig);
