@@ -1,3 +1,5 @@
 .next
 .git
 .gitignore
+private
+private.pub

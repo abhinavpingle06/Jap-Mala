@@ -25,7 +25,7 @@ export default function VerticalSlider() {
             {/* Top Arrow */}
             <button
                 onClick={() => swiperRef.current?.slidePrev()}
-                className="absolute top-2 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/80 p-2 shadow"
+                className="absolute top-2 left-1/2 z-10 -translate-x-1/2 rounded-full p-2 shadow"
             >
                 <ChevronUp size={20} />
             </button>
@@ -56,7 +56,7 @@ export default function VerticalSlider() {
             {/* Bottom Arrow */}
             <button
                 onClick={() => swiperRef.current?.slideNext()}
-                className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/80 p-2 shadow"
+                className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-full p-2 shadow"
             >
                 <ChevronDown size={20} />
             </button>
