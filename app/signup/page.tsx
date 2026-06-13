@@ -23,6 +23,11 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [delay, setDelay] = useState(true)
+
+  useEffect(()=> {
+    const auth = getAuth(app);
+    setAuth(auth)
+  },[])
   
   const handleGoogleLogin = async () => {
     try {
@@ -121,10 +126,6 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
-
-  if(delay){
-    return null
-  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#05040f] text-slate-100">

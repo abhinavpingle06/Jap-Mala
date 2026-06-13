@@ -18,6 +18,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [auth , setAuth] = useState<Auth | undefined>(undefined)
+  
+  useEffect(() => {
+    const auth = getAuth(app);
+    setAuth(auth)
+  }, [])
 
   const handleGoogleLogin = async () => {
     try {
