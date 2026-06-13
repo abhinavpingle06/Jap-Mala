@@ -49,7 +49,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
 
         {/* Rounds Info */}
         <div className="">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds testinggggg</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 mb-3">Completed Rounds - Confirming Storage issue </p>
           <p className="text-5xl sm:text-6xl font-semibold tracking-tight text-slate-900">{rounds}</p>
         </div>
 
