@@ -8,7 +8,7 @@ import { GlowBackground } from "@/components/GlowBackground";
 import { InputField } from "@/components/InputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { app } from "@/config/firebase";
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth, onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -18,12 +18,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [auth , setAuth] = useState<Auth | undefined>(undefined)
-
-  useEffect(()=> {
-      const auth = getAuth(app);
-      setAuth(auth)
-      const provider = new GoogleAuthProvider();
-    })
 
   const handleGoogleLogin = async () => {
     try {

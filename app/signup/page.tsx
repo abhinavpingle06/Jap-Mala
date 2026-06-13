@@ -7,8 +7,9 @@ import { AuthCard } from "@/components/AuthCard";
 import { GlowBackground } from "@/components/GlowBackground";
 import { InputField } from "@/components/InputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/config/firebase";
+import { useRouter } from "next/router";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -21,12 +22,7 @@ export default function SignupPage() {
   const [auth , setAuth] = useState<Auth | undefined>(undefined)
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  useEffect(()=> {
-    const auth = getAuth(app);
-    setAuth(auth)
-    const provider = new GoogleAuthProvider();
-  })
+  const [delay, setDelay] = useState(true)
   
   const handleGoogleLogin = async () => {
     try {
@@ -125,6 +121,10 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
+
+  if(delay){
+    return null
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#05040f] text-slate-100">
