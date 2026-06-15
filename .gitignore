@@ -45,3 +45,6 @@ next-env.d.ts
 # Github-Actions
 private
 private.pub
+
+# Testing
+middleware.ts

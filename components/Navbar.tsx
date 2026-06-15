@@ -1,5 +1,6 @@
 "use client";
 
+import { Auth, onAuthStateChanged } from "firebase/auth";
 import { motion } from "framer-motion";
 
 type NavLink = {
@@ -9,9 +10,22 @@ type NavLink = {
 
 type NavbarProps = {
   links: NavLink[];
+  auth:Auth | undefined ;
 };
 
-export function Navbar({ links }: NavbarProps) {
+
+export function Navbar({ links , auth }: NavbarProps) {
+
+  const handelOnClick = () => {
+    onAuthStateChanged(auth!, (user) => {
+      if (user) {
+        window.location.href = "/jap";
+      } else {
+        window.location.href = "/login";
+      }
+    })
+  }
+
   return (
     <motion.nav
       initial={false}
@@ -35,7 +49,7 @@ export function Navbar({ links }: NavbarProps) {
           ))}
         </div>
         <a
-          href="/login"
+          onClick={handelOnClick}
           className="rounded-full border border-orange-300/20 bg-orange-300/10 px-5 py-2.5 text-sm font-semibold text-orange-100 transition hover:border-orange-200/40 hover:bg-orange-300/15"
         >
           Start Chanting

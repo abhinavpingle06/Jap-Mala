@@ -7,8 +7,9 @@ import { AuthCard } from "@/components/AuthCard";
 import { GlowBackground } from "@/components/GlowBackground";
 import { InputField } from "@/components/InputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup, Auth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/config/firebase";
+import { useRouter } from "next/router";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -21,12 +22,12 @@ export default function SignupPage() {
   const [auth , setAuth] = useState<Auth | undefined>(undefined)
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [delay, setDelay] = useState(true)
 
   useEffect(()=> {
     const auth = getAuth(app);
     setAuth(auth)
-    const provider = new GoogleAuthProvider();
-  })
+  },[])
   
   const handleGoogleLogin = async () => {
     try {
@@ -40,6 +41,21 @@ export default function SignupPage() {
         provider
       );
 
+      const unsub = onAuthStateChanged(auth!, (user) => {
+        document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
+        const userData = {
+          uid: user!.uid,
+          name: user!.displayName,
+          email: user!.email,
+          loggedIn: true,
+        };
+        localStorage.setItem("NaamJaapID", JSON.stringify(userData));
+        if (user) {
+          console.log(user.uid);
+          console.log(user.displayName);
+        }
+      });
+      
       window.location.href = "/jap";
     } catch (err: any) {
       setError(
