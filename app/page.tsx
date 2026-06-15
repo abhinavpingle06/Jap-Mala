@@ -19,7 +19,28 @@ export default function Home() {
   useEffect(()=> {
     const auth = getAuth(app);
     setAuth(auth)
+    const user = auth.currentUser;
+    
+    console.log(auth)
+    const unsub = onAuthStateChanged(auth, (user) => {
+      console.log("User:", user);
+
+      if (user) {
+        console.log(user.uid);
+        console.log(user.displayName);
+      }
+    });
     },[])
+
+  const handelOnClick = () => {
+    onAuthStateChanged(auth!, (user) => {
+      if (user) {
+        window.location.href = "/jap";
+      } else {
+        window.location.href = "/login";
+      }
+    })
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#05040f] text-slate-100">
@@ -48,12 +69,12 @@ export default function Home() {
               Experience mantra chanting with virtual mala beads, calming ambience, and distraction-free focus.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <Link
-                href="/login"
+              <div
+                onClick={handelOnClick}
                 className="inline-flex items-center justify-center rounded-full bg-orange-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_50px_-30px_rgba(255,169,87,0.9)] transition hover:-translate-y-0.5 hover:bg-orange-200"
               >
                 Start Chanting
-              </Link>
+              </div>
               <a
                 href="#features"
                 className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-orange-200/40 hover:bg-white/10"

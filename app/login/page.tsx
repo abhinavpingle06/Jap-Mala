@@ -36,6 +36,14 @@ export default function LoginPage() {
         provider
       );
 
+      const unsub = onAuthStateChanged(auth!, (user) => {
+        document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
+        if (user) {
+          console.log(user.uid);
+          console.log(user.displayName);
+        }
+      });
+
       window.location.href = "/jap";
     } catch (err: any) {
       setError(
@@ -77,6 +85,14 @@ export default function LoginPage() {
 
       setSuccess("Login successful 🎉");
 
+      const unsub = onAuthStateChanged(auth!, (user) => {
+        document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
+        if (user) {
+          console.log(user.uid);
+          console.log(user.displayName);
+        }
+      });
+      
       window.location.href = "/jap";
     } catch (err: any) {
       switch (err.code) {
