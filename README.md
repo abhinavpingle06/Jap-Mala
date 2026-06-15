@@ -2,7 +2,8 @@
 
 A calm, modern landing page for a meditation-first app built with Next.js App Router.
 
-<img width="1901" height="909" alt="image" src="https://github.com/user-attachments/assets/91a74619-136e-4ead-8c01-93afcb69c40f" />
+<img width="1450" height="892" alt="image" src="https://github.com/user-attachments/assets/f5bd1325-7161-48c0-85c0-8435ac5da6b4" />
+
 
 
 This project is a lightweight UI prototype for a digital jap mala experience centered on mindfulness, soft motion, glassmorphism, and a peaceful bright theme.
