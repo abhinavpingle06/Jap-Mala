@@ -64,6 +64,8 @@ jobs:
               --restart unless-stopped \
               -p 3000:3000 \
               ${{ secrets.IMAGE_NAME }}
+            sudo docker image prune -f
+            sudo docker container prune -f
 
 
 
