@@ -14,9 +14,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN echo "API KEY is: $NEXT_PUBLIC_FIREBASE_API_KEY"
-
-RUN npm run build
+RUN npx next build --webpack
 
 # Stage 3: Production runtime
 FROM node:22-alpine AS runner
