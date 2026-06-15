@@ -6,6 +6,7 @@ import { CounterPanel } from "@/components/CounterPanel";
 import { navigate } from "next/dist/client/components/segment-cache/navigation";
 import { Home } from "lucide-react";
 
+
 const beadCount = 108;
 const visibleBeadCount = 9;
 const topBeadIndx = beadCount - (visibleBeadCount/2); //103
@@ -55,12 +56,18 @@ export function JapMala() {
     setVisualOffset(0);
     setIsAnimating(false);
     setLocation(5);
-
-    // if (timeoutRef.current) {
-    //   clearTimeout(timeoutRef.current);
-    //   timeoutRef.current = null;
-    // }
   }, []);
+
+  const handelHomeclick = () => {
+    const user = JSON.parse(localStorage.getItem("NaamJaapID")!);
+
+    if (!user?.loggedIn) {
+      window.alert("Signin as User");
+      return;
+    } else {
+      window.location.href = "/dashboard"
+    }
+  }
 
   // VIBRATION HANDLER
   const OnclickVibrate = () => {
@@ -151,8 +158,8 @@ export function JapMala() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#f8f0e5] flex">
-      <div onClick={()=> (window.location.href = "/dashboard")} className="z-50 fixed m-1 lg:m-4 top-3 right-1 lg:right-4 flex justify-end w-full">
-        <div className="rounded-2xl hover:cursor-pointer bg-amber-950/70 p-1 lg:p-3"><Home size={20} className="text-white" /></div>
+      <div onClick={handelHomeclick} className="z-50 fixed m-1 lg:m-4 top-3 right-1 lg:right-4 flex justify-end w-full">
+        <div className="rounded-2xl hover:cursor-pointer bg-amber-950/70 p-2 lg:p-3"><Home size={20} className="text-white" /></div>
       </div>
       {/* LEFT PANEL */}
       <div className="w-[42%] bg-[#ffead0] border-r border-[#d7c5a8]/40 flex flex-col">

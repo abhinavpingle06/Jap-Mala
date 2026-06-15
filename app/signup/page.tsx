@@ -43,6 +43,13 @@ export default function SignupPage() {
 
       const unsub = onAuthStateChanged(auth!, (user) => {
         document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
+        const userData = {
+          uid: user!.uid,
+          name: user!.displayName,
+          email: user!.email,
+          loggedIn: true,
+        };
+        localStorage.setItem("NaamJaapID", JSON.stringify(userData));
         if (user) {
           console.log(user.uid);
           console.log(user.displayName);
