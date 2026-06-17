@@ -41,7 +41,7 @@ export default function SignupPage() {
         provider
       );
 
-      const unsub = onAuthStateChanged(auth!, (user) => {
+      const unsub = onAuthStateChanged(auth!, async(user) => {
         document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
         const userData = {
           uid: user!.uid,
@@ -50,6 +50,11 @@ export default function SignupPage() {
           loggedIn: true,
         };
         localStorage.setItem("NaamJaapID", JSON.stringify(userData));
+        await fetch('/api/users', {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: user?.uid, name: user?.displayName, email: user?.email }),
+        })
         if (user) {
           console.log(user.uid);
           console.log(user.displayName);
@@ -100,8 +105,17 @@ export default function SignupPage() {
         email.trim(),
         password
       );
+      const user = userCredential.user
 
+      console.log(user)
       await sendEmailVerification(userCredential.user);
+      const res = await fetch('/api/users', {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: user?.uid, name: user?.displayName, email: user?.email }),
+      })
+      .then((res)=> res.json())
+      .then((res)=> console.log(res))
 
       setSuccess("Account created successfully 🎉");
 

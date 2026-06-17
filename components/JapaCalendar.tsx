@@ -28,13 +28,14 @@ function buildCalendar(year: number, month: number): CalendarDay[] {
     const today = new Date()
     const isToday = d.toDateString() === today.toDateString()
     const isFuture = d > today
-    days.push({ date: d, inMonth, isToday, isFuture, count: inMonth ? (Math.random() > 0.75 ? Math.floor(Math.random() * 200) : 0) : undefined })
+    days.push({ date: d, inMonth, isToday, isFuture, count: inMonth ? 0 : undefined})
   }
 
   return days
 }
 
 export default function JapaCalendar() {
+  
   const now = new Date()
   const [viewDate, setViewDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1))
   const [badge, setBadge] = useState<{ text: string; x: number; y: number } | null>(null)

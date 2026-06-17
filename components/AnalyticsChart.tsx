@@ -57,11 +57,10 @@ export default function AnalyticsChart({ view, data }: Props) {
                   <Tooltip />
 
                   <Line
-                      type="monotone"
+                      type={"bump"}
                       dataKey="value"
                       stroke="#f4a340"
-                      strokeWidth={3}
-                      dot={{ r: 3 }}
+                      strokeWidth={2}
                   />
               </LineChart>
       </ResponsiveContainer>
