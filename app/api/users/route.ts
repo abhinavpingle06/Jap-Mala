@@ -1,6 +1,6 @@
 import { pool } from '@/config/db';
 import { NextRequest, NextResponse } from 'next/server';
-import { useState } from 'react';
+import { PoolClient } from 'pg';
 
 interface User{
     id:number;
@@ -30,10 +30,9 @@ export async function GET() {
 }
 
 export async function POST(req:NextRequest){
-    const [client,setClient] = useState<any>(null)
+    let client : PoolClient | undefined;
     try {
-        const curr_client = await pool.connect();
-        setClient(curr_client)
+        const client = await pool.connect();
         const body:User = await req.json()
         const {id,name,email} = body
 
@@ -61,10 +60,12 @@ export async function POST(req:NextRequest){
 
         return NextResponse.json(result)
     } catch (error) {
-        if (client == null) return NextResponse.json({ "Error": "Failed to fetch the DB" })
-        await client.query('ROLLBACK');
+        if (client) {
+            await client.query('ROLLBACK');
+        }
         return NextResponse.json({"Error":error})
     } finally {
-        client.release()
+        if(client)
+            client.release()
     }
 }
