@@ -2,27 +2,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { CalendarDay } from '../lib/dashboardTypes'
 
-function startOfMonth(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), 1)
-}
-
-function endOfMonth(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth() + 1, 0)
-}
-
 interface Entry {
   japa_date: string,
   count:number,
   completed:boolean
- 
-// { japa_date: '2026-06-17', count: 10, completed: true }
-// length
-// :
-// 1
-// [[Prototype]]
-// :
-// Array(0)
-
 }
 
 function buildCalendar(year: number, month: number, entries: Entry[]): CalendarDay[] {
@@ -53,9 +36,7 @@ function buildCalendar(year: number, month: number, entries: Entry[]): CalendarD
         );
       }
     );
-
     const count = matchingEntry?.count ?? 0;
-    // console.log(count)
 
     days.push({ date: d, inMonth, isToday, isFuture, count: count })
   }
@@ -73,6 +54,7 @@ export default function JapaCalendar() {
     now.getFullYear(), 
     now.getMonth(), 1
   ))
+  const [isUpdated,setIsUpdated] = useState<boolean | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])
   const [popup, setPopup] = useState<{ text: string; x: number; y: number } | null>(null)
   const [creation_date, setCreation_date] = useState<Date | null>(null);
@@ -83,14 +65,30 @@ export default function JapaCalendar() {
     const user = JSON.parse(userObj!)
 
     const getEntries = async() => {
-      const res = await fetch(`/api/calendar?userId=${user.uid}&month=${viewDate.getMonth()+1}&year=${viewDate.getFullYear()}`)
-      const data = await res.json()
-      console.log("FULL DATA:", data);
-      console.log("entries:", data.entries);
-      console.log("creationDate:", data.creationDate);
-      console.log(data)
-      setEntries(data.entries)
-      setCreation_date(new Date(data.creationDate))
+      if(!isUpdated){
+        console.log("DB request in useeffect is getting called")
+        const res = await fetch(`/api/calendar?userId=${user.uid}&month=${viewDate.getMonth() + 1}&year=${viewDate.getFullYear()}`)
+        const data = await res.json()
+        console.log("DB request in useeffect is got fetched")
+        setEntries(data.entries)
+        setCreation_date(new Date(data.creationDate))
+        const cache_data = JSON.parse(localStorage.getItem(user.uid) || "{}")
+        const updated_data = {
+          ...cache_data,
+          entries : data.entries,
+          created_at: data.creationDate
+        }
+        localStorage.setItem(user.uid, JSON.stringify(updated_data))
+        
+        setIsUpdated(true)
+      } else {
+        console.log("Fetching data from cache instead of db")
+        const data = JSON.parse(localStorage.getItem(user.uid)!) || null;
+        const entries = data.entries ? data.entries : [];
+        const created_at = data.created_at ? data.created_at : null;
+        setEntries(entries)
+        setCreation_date(new Date(created_at))
+      }
     }
     getEntries();
   },[viewDate])
@@ -128,7 +126,7 @@ export default function JapaCalendar() {
         {days.map((day, idx) => {
           const cls = [] as string[]
           if (day.inMonth) cls.push('bg-[#f3ebdf] text-[#b7a99a]')
-            else cls.push('bg-white')
+            else cls.push('bg-slate-200')
 
           const creationDay = creation_date
             ? new Date(

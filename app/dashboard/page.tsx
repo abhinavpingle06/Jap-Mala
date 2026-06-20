@@ -20,7 +20,7 @@ const defaultStats: UserStatistics = {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<UserStatistics >(defaultStats)
-  const [isOnline, setIsOnline] = useState(false)
+  const [isOnline, setIsOnline] = useState(true)
   const [uid , setUid] = useState(null)
 
   // detect online/offline
@@ -35,7 +35,7 @@ export default function DashboardPage() {
       window.removeEventListener('online', updateStatus)
       window.removeEventListener('offline', updateStatus)
     }
-  }, [])
+  }, [isOnline])
 
   // fetch logic
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function DashboardPage() {
       }
     }
     loadData()
-  }, [isOnline])
+  }, [])
 
   const memoStats = useMemo(() => stats, [stats])
 
