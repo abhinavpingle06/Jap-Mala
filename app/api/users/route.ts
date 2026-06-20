@@ -1,5 +1,6 @@
 import { pool } from '@/config/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { useState } from 'react';
 
 interface User{
     id:number;
@@ -7,10 +8,9 @@ interface User{
     email:string;
 }
 
-const client = await pool.connect();
-
 export async function GET() {
     try {
+        const client = await pool.connect();
         const result = await pool.query(
             `SELECT current_database(),
          current_user,
@@ -30,7 +30,10 @@ export async function GET() {
 }
 
 export async function POST(req:NextRequest){
+    const [client,setClient] = useState<any>(null)
     try {
+        const curr_client = await pool.connect();
+        setClient(curr_client)
         const body:User = await req.json()
         const {id,name,email} = body
 
@@ -58,6 +61,7 @@ export async function POST(req:NextRequest){
 
         return NextResponse.json(result)
     } catch (error) {
+        if (client == null) return NextResponse.json({ "Error": "Failed to fetch the DB" })
         await client.query('ROLLBACK');
         return NextResponse.json({"Error":error})
     } finally {
