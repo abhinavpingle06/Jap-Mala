@@ -61,6 +61,7 @@ jobs:
             sudo docker run -d \
               --name naam-jaap \
               --env-file .env.local \
+              --env-file .env \
               --restart unless-stopped \
               -p 3000:3000 \
               ${{ secrets.IMAGE_NAME }}
