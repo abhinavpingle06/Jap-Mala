@@ -63,6 +63,7 @@ export function JapMala() {
 
     if (!user?.loggedIn) {
       window.alert("Signin as User");
+      window.location.href = "/signup"
       return;
     } else {
       window.location.href = "/dashboard"

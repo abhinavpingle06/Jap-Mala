@@ -103,8 +103,25 @@ export default function DashboardPage() {
         <JapaCalendar />
         <CalendarLegend />
 
-        <div className="mt-4">
-          <ProgressAnalytics />
+        <div className="mt-4 p-full">
+          <div className="mt-4 flex min-h-[250px] items-center justify-center rounded-3xl bg-[#fffaf0] border border-orange-200">
+            <div className="text-center">
+              <div className="flex justify-center mt-20 gap-2">
+                <div className="h-4 w-4 animate-bounce rounded-full bg-orange-400"></div>
+                <div className="h-4 w-4 animate-bounce rounded-full bg-orange-400 [animation-delay:150ms]"></div>
+                <div className="h-4 w-4 animate-bounce rounded-full bg-orange-400 [animation-delay:300ms]"></div>
+              </div>
+
+              <h2 className="mt-6 text-2xl font-bold text-orange-500">
+                Analytics Coming Soon
+              </h2>
+
+              <p className="mt-2 text-gray-500">
+                We're crafting powerful insights for your Japa journey.
+              </p>
+            </div>
+          </div>
+          {/* <ProgressAnalytics /> */}
         </div>
 
         <h2 className="mt-6 text-xl font-semibold text-[#2d1f16]">
