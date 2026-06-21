@@ -31,31 +31,40 @@ export default function LoginPage() {
       const provider =
         new GoogleAuthProvider();
 
-      await signInWithPopup(
-        auth!,
-        provider
-      );
+      // Use the result from signInWithPopup so we have the signed-in user immediately
+      const result = await signInWithPopup(auth!, provider);
+      const user = result.user;
 
-      const unsub = onAuthStateChanged(auth!, async (user) => {
-        document.cookie = `uid=${user!.uid}; path=/; max-age=20000`;
+      console.log('Google sign-in result:', user?.uid, user?.displayName);
+
+      if (user) {
+        document.cookie = `uid=${user.uid}; path=/; max-age=20000`;
         const userData = {
-          uid: user!.uid,
-          name: user!.displayName,
-          email: user!.email,
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
           loggedIn: true,
         };
         localStorage.setItem("NaamJaapID", JSON.stringify(userData));
-        await fetch('/api/users',{
-          method:"POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: user?.uid, name: user?.displayName, email: user?.email }),
-        }).then((res)=>res.json()).then((res)=> console.log(res))
-        if (user) {
-          console.log(user.uid);
-          console.log(user.displayName);
+
+        try {
+          const resp = await fetch('/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: user.uid, name: user.displayName, email: user.email }),
+          });
+
+          const body = await resp.json().catch(() => null);
+          console.log('/api/users response', resp.status, body);
+
+          if (!resp.ok) {
+            setError(`Server error: ${resp.status}`);
+          }
+        } catch (fetchErr: any) {
+          console.error('Fetch to /api/users failed', fetchErr);
+          setError('Failed to register user on server.');
         }
-        
-      });
+      }
 
       window.location.href = "/jap";
     } catch (err: any) {

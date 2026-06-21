@@ -21,7 +21,6 @@ const defaultStats: UserStatistics = {
 export default function DashboardPage() {
   const [stats, setStats] = useState<UserStatistics >(defaultStats)
   const [isOnline, setIsOnline] = useState(true)
-  const [uid , setUid] = useState(null)
 
   // detect online/offline
   useEffect(() => {

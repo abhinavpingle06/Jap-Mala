@@ -104,7 +104,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
       <div className="flex flex-col items-center space-y-4 max-w-full">
         {/* Reset Button */}
         <div className="flex gap-1 lg:gap-4 pb-1 lg:w-xl w-auto">
-          <button onClick={() => handelConfiguration("bead")} className="hover:bg-amber-300 flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400 ">
+          {/* <button onClick={() => handelConfiguration("bead")} className="hover:bg-amber-300 flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400 ">
             <Volume2 size={16} />
             <span className="text-[9px] mt-1">Beads</span>
           </button>
@@ -117,7 +117,7 @@ export function CounterPanel({ count, rounds, onReset }: CounterPanelProps) {
           <button onClick={() => handelConfiguration("music")} className="hover:bg-white flex flex-col items-center flex-1 py-2 rounded-lg border border-orange-400">
             <Music size={16} />
             <span className="text-[9px] mt-1">Music</span>
-          </button>
+          </button> */}
         </div>
         <button
           type="button"

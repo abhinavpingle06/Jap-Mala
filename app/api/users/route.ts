@@ -30,19 +30,19 @@ export async function GET() {
 }
 
 export async function POST(req:NextRequest){
-    let client : PoolClient | undefined;
+    let client: PoolClient | undefined = await pool.connect();
     try {
-        const client = await pool.connect();
-        const body:User = await req.json()
+        const body = await req.json()
         const {id,name,email} = body
 
         await client.query('BEGIN');
         
         // Creating a user
+        console.log(id,name,email)
         const QUERY = `
         insert into users (id,name,email)
         values ($1,$2,$3)
-        on conflict do nothing;
+        ON CONFLICT (user_id) DO NOTHING;
         `
         const result = await client.query(QUERY,[id,name,email])
 
@@ -51,19 +51,33 @@ export async function POST(req:NextRequest){
             `
             INSERT INTO dashboard (user_id)
             VALUES ($1)
-            on conflict do nothing;
+            ON CONFLICT (user_id) DO NOTHING;
+            `,
+            [id]
+        );
+
+        // CREATING INITIAL COUNT 
+        await client.query(
+            `
+            INSERT INTO japa_records (user_id)
+            VALUES ($1)
+            ON CONFLICT (user_id) DO NOTHING;
             `,
             [id]
         );
 
         await client.query('COMMIT');
 
-        return NextResponse.json(result)
+        return NextResponse.json({ success: true, rowCount: result.rowCount })
     } catch (error) {
+        // Log full error server-side for debugging
+        console.error('Error in POST /api/users:', error);
+
         if (client) {
             await client.query('ROLLBACK');
         }
-        return NextResponse.json({"Error":error})
+
+        return NextResponse.json({ error: String(error) }, { status: 500 });
     } finally {
         if(client)
             client.release()

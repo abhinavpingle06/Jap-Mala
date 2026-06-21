@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CounterPanel } from "@/components/CounterPanel";
-import { navigate } from "next/dist/client/components/segment-cache/navigation";
 import { Home } from "lucide-react";
 
 
@@ -22,6 +21,7 @@ function normalizeIndex(index: number) {
 export function JapMala() {
   const [count, setCount] = useState(0);
   const [rounds, setRounds] = useState(0);
+  const [countRound, setCountRound] = useState<number>(0);
 
   // Main Bead Position
   const [location, setLocation] = useState(5);
@@ -37,6 +37,41 @@ export function JapMala() {
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const beadAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  const [isOnline, setIsOnline] = useState(true)
+
+  // detect online/offline
+  useEffect(() => {
+    const updateStatus = () => setIsOnline(navigator.onLine)
+
+    updateStatus()
+    window.addEventListener('online', updateStatus)
+    window.addEventListener('offline', updateStatus)
+
+    return () => {
+      window.removeEventListener('online', updateStatus)
+      window.removeEventListener('offline', updateStatus)
+    }
+  }, [isOnline])
+
+  useEffect(()=>{
+    (async () => {
+      const stored = localStorage.getItem("NaamJaapID");
+      const user = stored ? JSON.parse(stored) : null;
+      if (isOnline && user !== null) {
+        console.log("Fetching Adddata")
+        await fetch('/api/addData', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ "round": countRound , "userid": user.uid })
+        })
+          .then(() => console.log("Round Recorded"))
+          .catch(() => console.log("Couldn't record count - will store in-memory"))
+      }
+    })()
+  },[countRound])
 
   useEffect(()=>{
     const audio = new Audio("audios/beads_audio1.mp3")
@@ -98,8 +133,8 @@ export function JapMala() {
 
     // Move beads DOWN visually
     setVisualOffset(beadSpacing);
-
-    timeoutRef.current = setTimeout(() => {
+    
+    timeoutRef.current = setTimeout(async () => {
       // Update logical mala index
       setCurrentIndex((prev) => normalizeIndex(prev + 1));
 
@@ -108,12 +143,17 @@ export function JapMala() {
       // Update counter
       setCount((prev) => {
         const next = prev + 1;
+        
         if (next > beadCount) {
           return -1;
         }
 
         return next;
       });
+
+      if(count>=beadCount){
+        setCountRound((prev) => prev + 1)
+      }
       // Reset visual offset instantly
       if(count == 103){
         setLocation(0);
@@ -162,6 +202,11 @@ export function JapMala() {
       <div onClick={handelHomeclick} className="z-50 fixed m-1 lg:m-4 top-3 right-1 lg:right-4 flex justify-end w-full">
         <div className="rounded-2xl hover:cursor-pointer bg-amber-950/70 p-2 lg:p-3"><Home size={20} className="text-white" /></div>
       </div>
+      {!isOnline && 
+      <div className="z-50 fixed m-1 lg:m-4 top-3 right-[40%] lg:right-[40%] flex justify-end w-full">
+        <h1 className="rounded-2xl hover:cursor-pointer bg-amber-950/70 p-2 lg:p-3"> Records won't be stored in offline mode! Be online</h1>
+      </div>
+      }
       {/* LEFT PANEL */}
       <div className="w-[42%] bg-[#ffead0] border-r border-[#d7c5a8]/40 flex flex-col">
         <CounterPanel
