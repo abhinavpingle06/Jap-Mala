@@ -42,7 +42,7 @@ export async function POST(req:NextRequest){
         const QUERY = `
         insert into users (id,name,email)
         values ($1,$2,$3)
-        ON CONFLICT (user_id) DO NOTHING;
+        ON CONFLICT (id) DO NOTHING;
         `
         const result = await client.query(QUERY,[id,name,email])
 
