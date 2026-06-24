@@ -61,7 +61,7 @@ export async function POST(req:NextRequest){
             `
             INSERT INTO japa_records (user_id)
             VALUES ($1)
-            ON CONFLICT (user_id) DO NOTHING;
+            ON CONFLICT (user_id, japa_date) DO NOTHING;
             `,
             [id]
         );
