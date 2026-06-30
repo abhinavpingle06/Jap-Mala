@@ -9,7 +9,7 @@ A calm, modern landing page for a meditation-first app built with Next.js App Ro
 This project is a lightweight UI prototype for a digital jap mala experience centered on mindfulness, soft motion, glassmorphism, and a peaceful bright theme.
 ###
 We are Testing, do check us out - [naamjaap](https://jap-mala-lovat.vercel.app/) 🏗️  
-Officially Releasing v1.0 around 20th June 2026 - [stay tuned]() 🧘‍♀️
+Officially Releasing v1.0 [naam jaap](naamjaap.app) 🧘‍♀️
 
 ## Features
 
